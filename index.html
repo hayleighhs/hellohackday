@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Hello World Greeter</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,800&family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<style>
+  /* Layout: one centered column, big greeting, sentence, thumb-reachable button */
+  :root {
+    --bg: #eef3f1;
+    --surface: #ffffff;
+    --ink: #13262b;
+    --muted: #4f6569;
+    --accent: #1f6f78;
+    --accent-ink: #ffffff;
+    --glow: #f2b84b;
+    --font-display: "Bricolage Grotesque", "Avenir Next", system-ui, sans-serif;
+    --font-body: "Atkinson Hyperlegible", system-ui, -apple-system, sans-serif;
+    color-scheme: light;
+    box-sizing: border-box;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0f1a1d; --surface: #172629; --ink: #e8f0ee; --muted: #9fb3b5;
+      --accent: #5fc2c9; --accent-ink: #0b1517; --glow: #f2b84b; color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0f1a1d; --surface: #172629; --ink: #e8f0ee; --muted: #9fb3b5;
+    --accent: #5fc2c9; --accent-ink: #0b1517; --glow: #f2b84b; color-scheme: dark;
+  }
+
+  html, body { height: 100%; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-size: 1.0625rem;
+    line-height: 1.55;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+    padding-block: 0;
+    display: grid;
+    place-items: center;
+  }
+  main {
+    width: 100%;
+    max-width: 30rem;
+    display: grid;
+    gap: 1.5rem;
+    padding-block: 3rem;
+  }
+  .sun {
+    width: 3.25rem; height: 3.25rem; border-radius: 50%;
+    background: var(--glow);
+    box-shadow: 0 0 0 0.6rem color-mix(in srgb, var(--glow) 25%, transparent);
+  }
+  h1 {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(2.75rem, 13vw, 4.25rem);
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+    margin: 0;
+    text-wrap: balance;
+  }
+  .card {
+    background: var(--surface);
+    border-radius: 1.25rem;
+    padding: 1.5rem 1.25rem;
+    display: grid;
+    gap: 1.25rem;
+  }
+  #message {
+    margin: 0;
+    font-size: 1.3rem;
+    line-height: 1.45;
+    min-height: 3.8em;
+    transition: opacity 180ms ease;
+  }
+  #message.swap { opacity: 0; }
+  .row {
+    display: flex; flex-wrap: wrap; align-items: center;
+    justify-content: space-between; gap: 0.75rem;
+  }
+  .count {
+    font-size: 0.8rem; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--muted); font-variant-numeric: tabular-nums;
+  }
+  button {
+    font: 700 1.05rem/1 var(--font-body);
+    color: var(--accent-ink);
+    background: var(--accent);
+    border: 0;
+    border-radius: 999px;
+    padding: 1rem 1.5rem;
+    min-height: 3rem;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: transform 120ms ease, filter 120ms ease;
+  }
+  button:hover { filter: brightness(1.08); }
+  button:active { transform: scale(0.96); }
+  button:focus-visible { outline: 3px solid var(--glow); outline-offset: 3px; }
+  .note { margin: 0; font-size: 0.85rem; color: var(--muted); }
+  @media (prefers-reduced-motion: reduce) {
+    #message, button { transition: none; }
+  }
+</style>
+</head>
+<body>
+<main>
+  <div class="sun" aria-hidden="true"></div>
+  <h1>Hello, world</h1>
+  <section class="card">
+    <p id="message" aria-live="polite">Whatever the sky is doing today, I hope you find a sunny spot.</p>
+    <div class="row">
+      <span class="count" id="count">Forecast 1 of 6</span>
+      <button id="next" type="button">Check the sky again</button>
+    </div>
+  </section>
+  <p class="note">Sample text only.</p>
+</main>
+
+<script>
+  const lines = [
+    "Whatever the sky is doing today, I hope you find a sunny spot.",
+    "A little drizzle never hurt anyone. Grab a brolly and carry on.",
+    "Clear skies tonight could mean a good look at the stars.",
+    "Windy out there? Perfect weather for drying the washing.",
+    "Grey morning, bright afternoon. Things usually pick up.",
+    "Snow or shine, a warm drink makes most weather better."
+  ];
+  let i = 0;
+  const msg = document.getElementById("message");
+  const count = document.getElementById("count");
+  document.getElementById("next").addEventListener("click", () => {
+    i = (i + 1) % lines.length;
+    msg.classList.add("swap");
+    setTimeout(() => {
+      msg.textContent = lines[i];
+      count.textContent = `Forecast ${i + 1} of ${lines.length}`;
+      msg.classList.remove("swap");
+    }, 180);
+  });
+</script>
+</body>
+</html>
